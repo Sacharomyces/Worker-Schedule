@@ -8,27 +8,27 @@ namespace WorkerSchedule
 {
     public class Worker
     {
-        Random randomWorker = new Random();
+        Random _randomWorker = new Random();
 
 
         public Worker(string name, int workerNumber)
         {
 
             Name = name;
-            CurrentStateProp = currentState;
-            vacationDaysLeft = 21; // a number of vacation days for a year//
+            CurrentStateProp = _currentState;
+            _vacationDaysLeft = 21; // a number of vacation days for a year//
             WorkerNumber = workerNumber;
             ShiftDaysLeft = 3; // shift has always 3 days//
         }
-        private static int vacationPossibilityParameter = 7;
+        private static int _vacationPossibilityParameter = 7;
         public string Name { get; }
-        private CurrentState currentState;
-        public CurrentState CurrentStateProp { get { return currentState; } set { currentState = value; } }
+        private CurrentState _currentState;
+        public CurrentState CurrentStateProp { get { return _currentState; } set { _currentState = value; } }
         public int DaysWorked { get; set; }
-        private int vacationDaysLeft;
-        public int VacationDaysLeft { get { return vacationDaysLeft; } private set { vacationDaysLeft = value; } } // total vacation days per year//
-        private int currentVacationsDays;
-        public int CurrentVacationDays { get { return currentVacationsDays; } set { currentVacationsDays = value; } }
+        private int _vacationDaysLeft;
+        public int VacationDaysLeft { get { return _vacationDaysLeft; } private set { _vacationDaysLeft = value; } } // total vacation days per year//
+        private int _currentVacationsDays;
+        public int CurrentVacationDays { get { return _currentVacationsDays; } set { _currentVacationsDays = value; } }
         public int WorkerNumber { get; } //value witch will be assigned to proper day during the fulfilling the calendar//
         public int ShiftDaysLeft { get; set; }
 
@@ -42,7 +42,7 @@ namespace WorkerSchedule
             int workersOnVacation = 0;
             foreach (Worker worker in workers)
             {
-                if (worker.CurrentStateProp == CurrentState.vacation)
+                if (worker.CurrentStateProp == CurrentState.Vacation)
                     workersOnVacation++;
             }
             if (workersOnVacation > 2)
@@ -61,17 +61,17 @@ namespace WorkerSchedule
         {
 
 
-            int possibility = randomWorker.Next(20);
-            if (possibility > vacationPossibilityParameter) // there is a changeable possibility that workers can go on vacation//
+            int possibility = _randomWorker.Next(20);
+            if (possibility > _vacationPossibilityParameter) // there is a changeable possibility that workers can go on vacation//
                 return false;
             else if (VacationAvaliable(workers) == false)// if more than two worker is on the vacation at the moment, selected worker must have next shift//
                 return false;
             else
                 if (VacationDaysLeft > 0)
             {
-                CurrentStateProp = CurrentState.vacation;
-                CurrentVacationDays = randomWorker.Next(2, 5);  // random number of days of one vacation// 
-                if (VacationDaysLeft - CurrentVacationDays < 0) //if number of total vacation days left is grater current vacation// 
+                CurrentStateProp = CurrentState.Vacation;
+                CurrentVacationDays = _randomWorker.Next(2, 5);  // random number of days of one vacation// 
+                if (VacationDaysLeft - CurrentVacationDays < 0) 
                 {
                     CurrentVacationDays = VacationDaysLeft;
                     VacationDaysLeft = 0;
@@ -93,9 +93,9 @@ namespace WorkerSchedule
 
         public enum CurrentState
         {
-            free,
-            work,
-            vacation
+            Free,
+            Work,
+            Vacation
         }
     }
 }
