@@ -10,80 +10,79 @@ namespace WorkerSchedule
     class Program
     {
 
-
-       private static void Main(string[] args)
+        static void Main(string[] args)
         {
+            DateTime dateTime = new DateTime(2016, 01, 01);
             WorkersComparer comparer = new WorkersComparer();
             Data data = new Data();
-            int [] calendar = new int[733];
+            List<int> calendar = new List<int>();
             Worker[] workers = new Worker[5];
             workers[0] = new Worker("Józef", 3);
             workers[1] = new Worker("Wiktor", 4);
             workers[2] = new Worker("Maria", 5);
             workers[3] = new Worker("Bartosz", 6);
             workers[4] = new Worker("Marcin", 7);
-            CalendarInitialize(calendar, workers);
+            data.YearsInitialize(calendar);
+            data.HolidaysInitialize(calendar);
             data.AssignWork(calendar, workers);
-            data.WorkersEfficiency(calendar,workers);
-            data.WorkerSort(workers, comparer,calendar);
-            data.AssignWork(calendar, workers, comparer);
             data.WorkersEfficiency(calendar, workers);
-            Output(calendar);
+            data.WorkerSort(workers, comparer, calendar);// I use this method here to check the sorted workers by their efficiency after assigning them without sorting method.//
+            data.AssignWork(calendar, workers, comparer);// overloaded method with sorting method to evenly distribute shifts//
+            data.WorkersEfficiency(calendar, workers);
+            Output(calendar, dateTime);
+
+
+        }
+
+
+
+        private static void Output(List<int> calendar, DateTime dateTime)
+        {
+            string workerList = "";
+            string date = "";
+            for (int day = Data.FirstDayOfSecondYear; day <= calendar.Count - 1; day++)
+            {
+                if (day == Data.FirstDayOfSecondYear)
+                {
+                    date = dateTime.ToShortDateString();
+                }
+                else
+                {
+                    dateTime = dateTime.AddDays(+1);
+                    date = dateTime.ToShortDateString();
+                }
+
+                switch (calendar[day])
+                {
+                    case 1:
+                        workerList += date + " Weekend" + Environment.NewLine;
+                        break;
+                    case 2:
+                        workerList += date + " Święto" + Environment.NewLine;
+                        break;
+
+                    case 3:
+                        workerList += date + " Józef" + Environment.NewLine;
+                        break;
+
+                    case 4:
+                        workerList += date + " Wiktor" + Environment.NewLine;
+                        break;
+                    case 5:
+                        workerList += date + " Maria" + Environment.NewLine;
+                        break;
+                    case 6:
+                        workerList += date + " Bartosz" + Environment.NewLine;
+                        break;
+                    case 7:
+                        workerList += date + " Marcin" + Environment.NewLine;
+                        break;
+                }
+            }
+
+            Console.WriteLine(workerList);
             Console.ReadKey();
-           
-
         }
-
-
-        private static void CalendarInitialize(int[] calendar, Worker[] workers)
-        {
-            int index = 0;
-            while (index < 728)
-            {
-                for (int workingDay = 0; workingDay < 5; workingDay++)
-                {
-                    calendar[index] = 0;
-                    index++;
-                }
-
-                for (int weekEnd = 0; weekEnd < 2; weekEnd++)
-                {
-                    calendar[index] = 1;
-                    index++;
-                }
-            }
-            var random = new Random();
-            int holidays = 0;
-            while (holidays < 40)
-            {
-
-                calendar[random.Next(0, 729)] = 2;
-                holidays++;
-            }
-
-        }
-        private static void Output(int[] calendar)
-        {
-            for (int day = 365;day<=729;day++)
-                switch(calendar[day])
-                {
-                    case 1: Console.WriteLine("Weekend");
-                        break;
-                    case 2: Console.WriteLine("Święto");
-                        break;
-                    case 3: Console.WriteLine("Józef");
-                        break;
-                    case 4: Console.WriteLine("Wiktor");
-                        break;
-                    case 5: Console.WriteLine("Maria");
-                        break;
-                    case 6: Console.WriteLine("Bartosz");
-                        break;
-                    case 7: Console.WriteLine("Marcin");
-                        break; 
-                }
-                   
-        } 
     }
 }
 
@@ -91,7 +90,5 @@ namespace WorkerSchedule
 
 
 
-
-                     
 
 

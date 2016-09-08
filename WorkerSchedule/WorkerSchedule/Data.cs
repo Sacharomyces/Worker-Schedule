@@ -21,13 +21,13 @@ namespace WorkerSchedule
 
 
         // integers used to fullfill the calendar with proper value//
-        private static int workingDay = 0;
-        private static int weekend = 1;
-        private static int holiday = 2;
+        private static int _workingDay = 0;
+        private static int _weekend = 1;
+        private static int _holiday = 2;
 
-        private static int maxCalendarValue = 728;
-        private static int firstDayOfTheCalendar = 3;
-        public static int firstDayOfSecondYear = 364;
+        private static int _maxCalendarValue = 728;
+        private static int _firstDayOfTheCalendar = 3;
+        public static int FirstDayOfSecondYear = 364;
 
 
 
@@ -42,21 +42,21 @@ namespace WorkerSchedule
 
                 if (month % 2 == 0 && month != 2 && month != 14)
 
-                    monthsInitialize(30, calendar, month, workingDay, weekend);
+                    MonthsInitialize(30, calendar, month, _workingDay, _weekend);
 
                 else if (month == 2)
 
-                    monthsInitialize(28, calendar, month, workingDay, weekend);
+                    MonthsInitialize(28, calendar, month, _workingDay, _weekend);
 
                 else if (month == 14)
 
-                    monthsInitialize(29, calendar, month, workingDay, weekend);
+                    MonthsInitialize(29, calendar, month, _workingDay, _weekend);
                 else
-                    monthsInitialize(31, calendar, month, workingDay, weekend);
+                    MonthsInitialize(31, calendar, month, _workingDay, _weekend);
             }
         }
 
-        private void monthsInitialize(int monthDaysCount, List<int> calendar, int month, int workingDay, int weekend) //often months ends in the middle on the week or at the weekend next month must start from the next day//
+        private void MonthsInitialize(int monthDaysCount, List<int> calendar, int month, int workingDay, int weekend) //often months ends in the middle on the week or at the weekend next month must start from the next day//
 
         {
             int workingDaysCounter = 0;
@@ -64,24 +64,24 @@ namespace WorkerSchedule
 
             if (month == 1)
             {
-                workingDaysCounter = firstDayOfTheCalendar; // calendar in this case must starts with thursday//
+                workingDaysCounter = _firstDayOfTheCalendar; // calendar in this case must starts with thursday//
             }
 
 
             if (WorkingDaysLeft > 0)
             {
                 workingDaysCounter = WorkingDaysLeft;
-                weekInitialize(calendar, monthDaysCount, workingDaysCounter, weekendDaysCounter);
+                WeekInitialize(calendar, monthDaysCount, workingDaysCounter, weekendDaysCounter);
             }
             else if (WeekendDaysLeft > 0)
             {
                 weekendDaysCounter = WeekendDaysLeft;
-                revWeekInitialize(calendar, monthDaysCount, workingDaysCounter, weekendDaysCounter);
+                RevWeekInitialize(calendar, monthDaysCount, workingDaysCounter, weekendDaysCounter);
             }
             else
-                weekInitialize(calendar, monthDaysCount, workingDaysCounter, weekendDaysCounter);
+                WeekInitialize(calendar, monthDaysCount, workingDaysCounter, weekendDaysCounter);
         }
-        private void weekInitialize(List<int> calendar, int monthDaysCount, int workingDaysCounter, int weekendDaysCounter)// method assigns proper value to the certain day od calendar.//
+        private void WeekInitialize(List<int> calendar, int monthDaysCount, int workingDaysCounter, int weekendDaysCounter)// method assigns proper value to the certain day od calendar.//
         {
             int day = 0;
 
@@ -92,7 +92,7 @@ namespace WorkerSchedule
                 {
                     if (day < monthDaysCount)
                     {
-                        calendar.Add(workingDay);
+                        calendar.Add(_workingDay);
                         day++;
                     }
                     else
@@ -109,7 +109,7 @@ namespace WorkerSchedule
                     {
                         if (day < monthDaysCount)// ends loop at the end of the month//
                         {
-                            calendar.Add(weekend);
+                            calendar.Add(_weekend);
                             day++;
                         }
                         else
@@ -128,7 +128,7 @@ namespace WorkerSchedule
                 weekendDaysCounter = 0;
             }
         }
-        private void revWeekInitialize(List<int> calendar, int monthDaysCount, int workingDaysCounter, int weekendDaysCounter)// reversed version of weekInitializer is used in case new month starts at weekend.//
+        private void RevWeekInitialize(List<int> calendar, int monthDaysCount, int workingDaysCounter, int weekendDaysCounter)// reversed version of weekInitializer is used in case new month starts at weekend.//
         {
             int day = 0;
 
@@ -139,7 +139,7 @@ namespace WorkerSchedule
                 {
                     if (day < monthDaysCount)
                     {
-                        calendar.Add(weekend);
+                        calendar.Add(_weekend);
                         day++;
                     }
                     else
@@ -156,7 +156,7 @@ namespace WorkerSchedule
                     {
                         if (day < monthDaysCount)
                         {
-                            calendar.Add(workingDay);
+                            calendar.Add(_workingDay);
                             day++;
                         }
                         else
@@ -183,18 +183,18 @@ namespace WorkerSchedule
             while (totalHolidays < 40)
             {
 
-                calendar[random.Next(0, calendar.Count)] = holiday;
+                calendar[random.Next(0, calendar.Count)] = _holiday;
                 totalHolidays++;
             }
 
         }
-        public int checkAvailableWorker(Worker[] workers)  //checking witch worker has a free status to do the next shift//
+        public int CheckAvailableWorker(Worker[] workers)  //checking witch worker has a free status to do the next shift//
         {
             Random random = new Random();
             int workerNumber = 0;
 
             next:
-            checkWorkStatus(workers);
+            CheckWorkStatus(workers);
             foreach (Worker worker in workers)
             {
                 if (worker.CurrentStateProp == Worker.CurrentState.Free)
@@ -224,15 +224,15 @@ namespace WorkerSchedule
 
         }
 
-        public void checkWorkStatus(Worker[] workers)
+        public void CheckWorkStatus(Worker[] workers)
         {
-            int WorkStatusCounter = 0;
+            int workStatusCounter = 0;
             foreach (Worker worker in workers)
             {
                 if (worker.CurrentStateProp != Worker.CurrentState.Free)
-                    WorkStatusCounter++;
+                    workStatusCounter++;
             }
-            if (WorkStatusCounter == 5)
+            if (workStatusCounter == 5)
             {
                 foreach (Worker worker in workers)
                     if (worker.CurrentStateProp == Worker.CurrentState.Work)
@@ -240,21 +240,21 @@ namespace WorkerSchedule
 
             }
         }
-        public void assignWork(List<int> calendar, Worker[] workers)
+        public void AssignWork(List<int> calendar, Worker[] workers)
         {
-            int Worker = 0;
-            Worker = checkAvailableWorker(workers);
+            int worker = 0;
+            worker = CheckAvailableWorker(workers);
 
             for (int day = 0; day < 363;)
             {
                 for (int shiftDays = 0; shiftDays < 3; shiftDays++)
                 {
-                    if (checkCalendar(calendar, day))
+                    if (CheckCalendar(calendar, day))
                     {
 
-                        calendar[day] = Worker;
+                        calendar[day] = worker;
                         day++;
-                        currentVacationDaysDecrement(workers);
+                        CurrentVacationDaysDecrement(workers);
                     }
                     else
                     {
@@ -264,19 +264,19 @@ namespace WorkerSchedule
                     }
 
                 }
-                Worker = checkAvailableWorker(workers);
+                worker = CheckAvailableWorker(workers);
             }
         }
 
-        public void assignWork(List<int> calendar, Worker[] workers, WorkersComparer comparer)
+        public void AssignWork(List<int> calendar, Worker[] workers, WorkersComparer comparer)
         {
             foreach (Worker worker in workers)  //resets count of vacation days for the next year//
                 worker.ResetVacationsDays();
 
             int Worker = 0;
-            Worker = checkAvailableWorker(workers);    // assign an available worker to do the next shift, checkAvailable Worker method returns a specific worker number//
+            Worker = CheckAvailableWorker(workers);    // assign an available worker to do the next shift, checkAvailable Worker method returns a specific worker number//
 
-            for (int day = 363; day < maxCalendarValue;)   //sorting the workers every 10 days to distribute the work evenly//
+            for (int day = 363; day < _maxCalendarValue;)   //sorting the workers every 10 days to distribute the work evenly//
             {
                 if (day % 10 == 0)
                 {
@@ -287,12 +287,12 @@ namespace WorkerSchedule
                 {
                     if (day < 729)
                     {
-                        if (checkCalendar(calendar, day)) //checking calendar if it is a working day (int = 0)// 
+                        if (CheckCalendar(calendar, day)) //checking calendar if it is a working day (int = 0)// 
                         {
 
                             calendar[day] = Worker;// worker number of selected worker is assigned to the calendar array//
                             day++;
-                            currentVacationDaysDecrement(workers);
+                            CurrentVacationDaysDecrement(workers);
                         }
                         else //shifts must last 3 days so in case of checking holidays and weekends shiftDays count must stay const//
                         {
@@ -302,10 +302,10 @@ namespace WorkerSchedule
                         }
                     }
                 }
-                Worker = checkAvailableWorker(workers);
+                Worker = CheckAvailableWorker(workers);
             }
         }
-        private bool checkCalendar(List<int> calendar, int day)
+        private bool CheckCalendar(List<int> calendar, int day)
         {
 
 
@@ -315,7 +315,7 @@ namespace WorkerSchedule
             else
                 return false;
         }
-        private void currentVacationDaysDecrement(Worker[] workers)
+        private void CurrentVacationDaysDecrement(Worker[] workers)
         {
             foreach (Worker worker in workers)
             {
@@ -326,22 +326,22 @@ namespace WorkerSchedule
             }
         }
 
-        public void workersEfficiency(List<int> calendar, Worker[] workers)
+        public void WorkersEfficiency(List<int> calendar, Worker[] workers) // method counts the numer of day worked for each worker// 
         {
             foreach (Worker worker in workers)
                 worker.DaysWorked = 0;
             for (int day = 0; day < calendar.Count; day++)
             {
                 foreach (Worker worker in workers)
-                    if (calendar[day] == worker.WorkerNumber)
+                    if (day == worker.WorkerNumber)
                         worker.DaysWorked++;
 
             }
         }
 
-        public void WorkerSort(Worker[] workers, WorkersComparer comparer, List<int> calendar)
+        public void WorkerSort(Worker[] workers, WorkersComparer comparer, List<int> calendar) 
         {
-            workersEfficiency(calendar, workers);
+            WorkersEfficiency(calendar, workers);
             Array.Sort(workers, comparer);
         }
 
