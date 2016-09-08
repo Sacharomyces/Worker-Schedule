@@ -11,31 +11,31 @@ namespace WorkerSchedule
     {
 
 
-       static void Main(string[] args)
+       private static void Main(string[] args)
         {
             WorkersComparer comparer = new WorkersComparer();
             Data data = new Data();
-            int[] calendar = new int[733];
+            int [] calendar = new int[733];
             Worker[] workers = new Worker[5];
             workers[0] = new Worker("Józef", 3);
             workers[1] = new Worker("Wiktor", 4);
             workers[2] = new Worker("Maria", 5);
             workers[3] = new Worker("Bartosz", 6);
             workers[4] = new Worker("Marcin", 7);
-            calendarInitialize(calendar, workers);
-            data.assignWork(calendar, workers);
-            data.workersEfficiency(calendar,workers);
+            CalendarInitialize(calendar, workers);
+            data.AssignWork(calendar, workers);
+            data.WorkersEfficiency(calendar,workers);
             data.WorkerSort(workers, comparer,calendar);
-            data.assignWork(calendar, workers, comparer);
-            data.workersEfficiency(calendar, workers);
-            output(calendar);
+            data.AssignWork(calendar, workers, comparer);
+            data.WorkersEfficiency(calendar, workers);
+            Output(calendar);
             Console.ReadKey();
            
 
         }
 
 
-        private static void calendarInitialize(int[] calendar, Worker[] workers)
+        private static void CalendarInitialize(int[] calendar, Worker[] workers)
         {
             int index = 0;
             while (index < 728)
@@ -52,7 +52,7 @@ namespace WorkerSchedule
                     index++;
                 }
             }
-            Random random = new Random();
+            var random = new Random();
             int holidays = 0;
             while (holidays < 40)
             {
@@ -62,7 +62,7 @@ namespace WorkerSchedule
             }
 
         }
-        private static void output(int[] calendar)
+        private static void Output(int[] calendar)
         {
             for (int day = 365;day<=729;day++)
                 switch(calendar[day])

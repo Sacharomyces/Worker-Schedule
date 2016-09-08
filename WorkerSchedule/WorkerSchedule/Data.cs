@@ -21,21 +21,21 @@ namespace WorkerSchedule
 
         
 
-        public  int checkWorker(Worker[] workers)
+        public  int CheckWorker(Worker[] workers)
         {
             Random random = new Random();
             int workerNumber = 0;
 
             next:
-            checkWorkStatus(workers);
+            CheckWorkStatus(workers);
             foreach (Worker worker in workers)
             {
-                if (worker.CurrentStateProp == Worker.CurrentState.free)
+                if (worker.CurrentStateProp == Worker.CurrentState.Free)
                 {
                     if (worker.DoThisJob(workers))
                     {
                         workerNumber = worker.WorkerNumber;
-                        worker.CurrentStateProp = Worker.CurrentState.work;
+                        worker.CurrentStateProp = Worker.CurrentState.Work;
                         break;
                     }
                     else
@@ -57,37 +57,37 @@ namespace WorkerSchedule
 
         }
 
-        public  void checkWorkStatus(Worker[] workers)
+        public  void CheckWorkStatus(Worker[] workers)
         {
-            int WorkStatusCounter = 0;
+            int workStatusCounter = 0;
             foreach (Worker worker in workers)
             {
-                if (worker.CurrentStateProp != Worker.CurrentState.free)
-                    WorkStatusCounter++;
+                if (worker.CurrentStateProp != Worker.CurrentState.Free)
+                    workStatusCounter++;
             }
-            if (WorkStatusCounter == 5)
+            if (workStatusCounter == 5)
             {
                 foreach (Worker worker in workers)
-                    if (worker.CurrentStateProp == Worker.CurrentState.work)
-                        worker.CurrentStateProp = Worker.CurrentState.free;
+                    if (worker.CurrentStateProp == Worker.CurrentState.Work)
+                        worker.CurrentStateProp = Worker.CurrentState.Free;
 
             }
         }
-        public void assignWork(int[] calendar, Worker[] workers)
+        public void AssignWork(int[] calendar, Worker[] workers)
         {
-            int Worker = 0;
-            Worker = checkWorker(workers);
+            int worker = 0;
+            worker = CheckWorker(workers);
 
             for (int day = 0; day < 363;)
             {
                 for (int shiftDays = 0; shiftDays < 3; shiftDays++)
                 {
-                    if (checkCalendar(calendar, day))
+                    if (CheckCalendar(calendar, day))
                     {
 
-                        calendar[day] = Worker;
+                        calendar[day] = worker;
                         day++;
-                        vacationDaysDecrement(workers);
+                        VacationDaysDecrement(workers);
                     }
                     else
                     {
@@ -97,14 +97,14 @@ namespace WorkerSchedule
                     }
 
                 }
-                Worker = checkWorker(workers);
+                worker = CheckWorker(workers);
             }
         }
 
-        public void assignWork(int[] calendar, Worker[] workers,WorkersComparer comparer)
+        public void AssignWork(int[] calendar, Worker[] workers,WorkersComparer comparer)
         {
-            int Worker = 0;
-            Worker = checkWorker(workers);
+            int worker = 0;
+            worker = CheckWorker(workers);
 
             for (int day = 363; day < 729;)
             {
@@ -116,12 +116,12 @@ namespace WorkerSchedule
                 for (int shiftDays = 0; shiftDays < 3; shiftDays++)
                 {
                     
-                    if (checkCalendar(calendar, day))
+                    if (CheckCalendar(calendar, day))
                     {
 
-                        calendar[day] = Worker;
+                        calendar[day] = worker;
                         day++;
-                        vacationDaysDecrement(workers);
+                        VacationDaysDecrement(workers);
                     }
                     else
                     {
@@ -131,10 +131,10 @@ namespace WorkerSchedule
                     }
 
                 }
-                Worker = checkWorker(workers);
+                worker = CheckWorker(workers);
             }
         }
-        private  bool checkCalendar(int[] calendar, int day)
+        private  bool CheckCalendar(int[] calendar, int day)
         {
             
 
@@ -144,18 +144,18 @@ namespace WorkerSchedule
             else
                 return false;
         }
-        private void vacationDaysDecrement(Worker[] workers)
+        private void VacationDaysDecrement(Worker[] workers)
         {
             foreach (Worker worker in workers)
             {
                 if (worker.CurrentVacationDays > 0)
                     worker.CurrentVacationDays--;
-                if (worker.CurrentVacationDays == 0 && worker.CurrentStateProp == Worker.CurrentState.vacation)
-                    worker.CurrentStateProp = Worker.CurrentState.free;
+                if (worker.CurrentVacationDays == 0 && worker.CurrentStateProp == Worker.CurrentState.Vacation)
+                    worker.CurrentStateProp = Worker.CurrentState.Free;
             }
         }
 
-        public void workersEfficiency(int[] calendar,Worker[] workers)
+        public void WorkersEfficiency(int[] calendar,Worker[] workers)
         {
             foreach (Worker worker in workers)
                 worker.DaysWorked = 0;
@@ -170,7 +170,7 @@ namespace WorkerSchedule
 
         public void WorkerSort (Worker[] workers,WorkersComparer comparer,int[] calendar)
         {
-            workersEfficiency(calendar,workers);
+            WorkersEfficiency(calendar,workers);
             Array.Sort(workers, comparer);
         }
 
